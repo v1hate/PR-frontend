@@ -3,33 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Aplicación de Envío de Archivos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/styles.css">
-    <title>Compartir Archivos</title>
 </head>
 <body>
-    <div class="container">
-        <h1 class="mt-5">Compartir Archivos en la Red Local</h1>
-
-        <div class="mb-4">
-            <h4>Conectar Usuario</h4>
-            <input type="text" id="userId" placeholder="Ingresa tu ID de usuario" class="form-control">
-            <button id="connectButton" class="btn btn-primary mt-2">Conectar</button>
-        </div>
-
-        <h4>Subir Archivo</h4>
-        <form id="uploadForm">
-            <input type="file" name="file" class="form-control" required>
-            <button type="submit" class="btn btn-success mt-2">Subir</button>
+    <div class="container mt-5">
+        <h2>Conectar Usuario</h2>
+        <form id="connectForm">
+            <div class="form-group">
+                <label for="userId">ID de Usuario:</label>
+                <input type="text" class="form-control" id="userId" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Conectar</button>
         </form>
 
-        <h4>Archivos Subidos</h4>
-        <ul id="fileList" class="list-group mb-4"></ul>
+        <h2 class="mt-4">Enviar Archivo</h2>
+        <form id="uploadForm">
+            <div class="form-group">
+                <input type="file" class="form-control-file" id="fileInput" required>
+                <input type="hidden" id="connectedUserId" value="">
+            </div>
+            <button type="submit" class="btn btn-success">Subir Archivo</button>
+        </form>
 
-        <h4>Solicitudes Pendientes</h4>
-        <ul id="pendingRequests" class="list-group"></ul>
+        <h4 class="mt-4">Usuarios Conectados</h4>
+        <ul id="connectedUsersList" class="list-group mb-4"></ul>
     </div>
-
+    
     <script src="assets/script.js"></script>
 </body>
 </html>
