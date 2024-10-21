@@ -10,18 +10,24 @@
 <body>
     <div class="container">
         <h1>File Sharing Application</h1>
-        <input type="text" id="userId" placeholder="Enter your user ID" class="form-control">
-        <button id="connectBtn" class="btn btn-primary">Connect</button>
+        
+        <div id="userInput">
+            <input type="text" id="userId" placeholder="Enter your user ID" class="form-control">
+            <button id="connectBtn" class="btn btn-primary">Connect</button>
+        </div>
+        
+        <h2 id="welcomeMessage" style="display: none;"></h2>
 
         <h2>Connected Users</h2>
         <ul id="userList" class="list-group"></ul>
 
         <h2>Upload File</h2>
-        <input type="file" id="fileInput" class="form-control">
-        <button id="uploadBtn" class="btn btn-success">Upload</button>
+        <input type="file" id="fileInput" class="form-control" style="display: none;">
+        <button id="uploadBtn" class="btn btn-success" style="display: none;">Upload</button>
+        <div id="uploadStatus"></div>
     </div>
 
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script src="app.js"></script>  <!-- Incluye el archivo JavaScript aquí -->
+    <script src="app.js"></script>
 </body>
 </html>
