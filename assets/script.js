@@ -1,5 +1,7 @@
 // frontend/app.js
-const socket = io('http://localhost:5000');
+const BASE_URL = 'https://pr-backend-d3rg.onrender.com'; // Cambia esto a la URL de tu backend en Render
+const socket = io(BASE_URL);
+
 let userId;
 
 document.getElementById('connectBtn').onclick = () => {
@@ -22,7 +24,7 @@ document.getElementById('uploadBtn').onclick = () => {
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
     formData.append('user_id', userId);
-    fetch('http://localhost:5000/upload', {
+    fetch(`${BASE_URL}/upload`, { // Usa la variable BASE_URL aquí
         method: 'POST',
         body: formData
     }).then(response => response.json())
