@@ -1,117 +1,34 @@
-const BASE_URL = 'https://pr-backend-d3rg.onrender.com'; // Cambia esto por la URL de tu back-end
-const socket = io(BASE_URL);
+// frontend/app.js
+const socket = io('http://localhost:5000');
+let userId;
 
-// Manejar la conexión de usuario
-document.getElementById('connectForm').onsubmit = async function(event) {
-    event.preventDefault();
-    const userId = document.getElementById('userId').value;
-
-    const response = await fetch(`${BASE_URL}/connect`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_id: userId })
-    });
-
-    const result = await response.json();
-    alert(result.message);
-    document.getElementById('connectedUserId').value = userId; // Guardar el ID de usuario conectado
+document.getElementById('connectBtn').onclick = () => {
+    userId = document.getElementById('userId').value;
+    socket.emit('connect', { user_id: userId });
 };
 
-// Manejar la subida de archivos
-document.getElementById('uploadForm').onsubmit = async function(event) {
-    event.preventDefault();
-    const fileInput = document.getElementById('fileInput');
-    const userId = document.getElementById('connectedUserId').value;
+socket.on('user_list', (users) => {
+    const userList = document.getElementById('userList');
+    userList.innerHTML = '';
+    users.forEach(user => {
+        const li = document.createElement('li');
+        li.textContent = user;
+        userList.appendChild(li);
+    });
+});
 
+document.getElementById('uploadBtn').onclick = () => {
+    const fileInput = document.getElementById('fileInput');
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
     formData.append('user_id', userId);
-
-    const response = await fetch(`${BASE_URL}/upload`, {
+    fetch('http://localhost:5000/upload', {
         method: 'POST',
         body: formData
-    });
-
-    const result = await response.json();
-    alert(result.message);
-    fileInput.value = ''; // Limpiar el campo de entrada
+    }).then(response => response.json())
+      .then(data => console.log(data));
 };
 
-// Manejar la actualización de usuarios conectados en tiempo real
-socket.on('update_users', function(users) {
-    const connectedUsersList = document.getElementById('connectedUsersList');
-    connectedUsersList.innerHTML = '';  // Limpiar la lista
-    users.forEach(user => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item';
-        li.textContent = user;
-        connectedUsersList.appendChild(li);
-    });
+socket.on('file_uploaded', (data) => {
+    console.log('File uploaded:', data);
 });
-
-// Manejar la actualización de archivos subidos en tiempo real
-socket.on('update_files', function(files) {
-    const uploadedFilesList = document.getElementById('uploadedFilesList');
-    uploadedFilesList.innerHTML = '';  // Limpiar la lista
-    files.forEach(file => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item';
-        li.innerHTML = `${file} <a href="${BASE_URL}/download/${file}" class="btn btn-link">Descargar</a>`;
-        uploadedFilesList.appendChild(li);
-    });
-});
-
-// Cargar usuarios conectados y archivos subidos al cargar la página
-window.onload = async function() {
-    const userId = document.getElementById('connectedUserId').value;
-    if (userId) {
-        await loadConnectedUsers();
-        await loadUploadedFiles();
-    }
-};
-
-// Cargar archivos subidos (puede ser opcional si se usa WebSocket)
-async function loadUploadedFiles() {
-    const response = await fetch(`${BASE_URL}/files`);
-    const files = await response.json();
-
-    const uploadedFilesList = document.getElementById('uploadedFilesList');
-    uploadedFilesList.innerHTML = '';  // Limpiar la lista
-    files.forEach(file => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item';
-        li.innerHTML = `${file} <a href="${BASE_URL}/download/${file}" class="btn btn-link">Descargar</a>`;
-        uploadedFilesList.appendChild(li);
-    });
-}
-
-// Cargar usuarios conectados
-async function loadConnectedUsers() {
-    const response = await fetch(`${BASE_URL}/connected-users`);
-    const users = await response.json();
-
-    const connectedUsersList = document.getElementById('connectedUsersList');
-    connectedUsersList.innerHTML = '';  // Limpiar la lista
-    users.forEach(user => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item';
-        li.textContent = user;
-        connectedUsersList.appendChild(li);
-    });
-};
-
-// Desconectar al usuario al recargar o cerrar la página
-window.onbeforeunload = async function() {
-    const userId = document.getElementById('connectedUserId').value;
-    if (userId) {
-        await fetch(`${BASE_URL}/disconnect`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ user_id: userId })
-        });
-    }
-};

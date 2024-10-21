@@ -1,40 +1,27 @@
+<!-- frontend/index.html -->
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplicación de Envío de Archivos</title>
+    <title>File Sharing App</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script> <!-- Añade esta línea -->
 </head>
 <body>
-    <div class="container mt-5">
-        <h2>Conectar Usuario</h2>
-        <form id="connectForm">
-            <div class="form-group">
-                <label for="userId">ID de Usuario:</label>
-                <input type="text" class="form-control" id="userId" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Conectar</button>
-        </form>
+    <div class="container">
+        <h1>File Sharing Application</h1>
+        <input type="text" id="userId" placeholder="Enter your user ID" class="form-control">
+        <button id="connectBtn" class="btn btn-primary">Connect</button>
 
-        <h2 class="mt-4">Enviar Archivo</h2>
-        <form id="uploadForm">
-            <div class="form-group">
-                <input type="file" class="form-control-file" id="fileInput" required>
-                <input type="hidden" id="connectedUserId" value="">
-            </div>
-            <button type="submit" class="btn btn-success">Subir Archivo</button>
-        </form>
+        <h2>Connected Users</h2>
+        <ul id="userList" class="list-group"></ul>
 
-        <h4 class="mt-4">Usuarios Conectados</h4>
-        <ul id="connectedUsersList" class="list-group mb-4"></ul>
-
-        <h4 class="mt-4">Archivos Subidos</h4>
-        <ul id="uploadedFilesList" class="list-group"></ul>
+        <h2>Upload File</h2>
+        <input type="file" id="fileInput" class="form-control">
+        <button id="uploadBtn" class="btn btn-success">Upload</button>
     </div>
-    
-    <script src="assets/script.js"></script>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="app.js"></script>  <!-- Incluye el archivo JavaScript aquí -->
 </body>
 </html>
