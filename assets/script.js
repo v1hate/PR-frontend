@@ -54,5 +54,10 @@ async function loadConnectedUsers() {
     });
 }
 
+// Cargar usuarios conectados al cargar la página y cada 5 segundos
+setInterval(loadConnectedUsers, 5000);
+window.onload = loadConnectedUsers;
+
+
 // Cargar usuarios conectados al cargar la página
 window.onload = loadConnectedUsers;
