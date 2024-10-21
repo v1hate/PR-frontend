@@ -1,3 +1,4 @@
+// frontend/app.js
 const BASE_URL = 'https://pr-backend-d3rg.onrender.com'; // Cambia esto a la URL de tu backend en Render
 const socket = io(BASE_URL);
 let userId;
@@ -6,6 +7,7 @@ document.getElementById('connectBtn').onclick = connectUser;
 
 socket.on('user_list', updateUserList);
 socket.on('file_uploaded', displayUploadStatus);
+socket.on('update_file_list', updateFileList); // Evento para la lista de archivos
 
 document.getElementById('uploadBtn').onclick = uploadFile;
 
@@ -67,4 +69,49 @@ function displayUploadStatus(data) {
     } else {
         uploadStatus.innerText = `File uploaded by ${data.user_id}: ${data.filename}`;
     }
+}
+
+// Nueva función para actualizar la lista de archivos
+function updateFileList(files) {
+    const fileList = document.getElementById('fileList');
+    fileList.innerHTML = ''; // Limpiar la lista actual
+    files.forEach(file => {
+        const li = document.createElement('li');
+        li.textContent = file;
+
+        // Botón de descarga
+        const downloadBtn = document.createElement('button');
+        downloadBtn.innerText = 'Download';
+        downloadBtn.onclick = () => downloadFile(file);
+        li.appendChild(downloadBtn);
+
+        // Botón de eliminación
+        const deleteBtn = document.createElement('button');
+        deleteBtn.innerText = 'Delete';
+        deleteBtn.onclick = () => deleteFile(file);
+        li.appendChild(deleteBtn);
+
+        fileList.appendChild(li);
+    });
+}
+
+// Función para descargar archivos
+function downloadFile(filename) {
+    window.open(`${BASE_URL}/files/${filename}`, '_blank');
+}
+
+// Función para eliminar archivos
+function deleteFile(filename) {
+    fetch(`${BASE_URL}/delete/${filename}`, { method: 'DELETE' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert(`File ${filename} deleted successfully.`);
+            } else {
+                alert(`Error deleting file: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            alert(`Error deleting file: ${error.message}`);
+        });
 }
