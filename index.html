@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/styles.css">
-    <title>Enviar Archivos</title>
+    <title>Compartir Archivos</title>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Enviar Archivos</h1>
-        <div class="form-group">
-            <input type="text" id="userId" class="form-control" placeholder="Ingresa tu ID de usuario" required>
-            <button id="connectButton" class="btn btn-secondary mt-2">Conectar</button>
+    <div class="container">
+        <h1 class="mt-5">Compartir Archivos en la Red Local</h1>
+
+        <div class="mb-4">
+            <h4>Conectar Usuario</h4>
+            <input type="text" id="userId" placeholder="Ingresa tu ID de usuario" class="form-control">
+            <button id="connectButton" class="btn btn-primary mt-2">Conectar</button>
         </div>
+
+        <h4>Subir Archivo</h4>
         <form id="uploadForm">
-            <div class="form-group">
-                <input type="file" name="file" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Subir Archivo</button>
+            <input type="file" name="file" class="form-control" required>
+            <button type="submit" class="btn btn-success mt-2">Subir</button>
         </form>
-        <hr>
-        <h2>Archivos Subidos</h2>
-        <ul id="fileList" class="list-group"></ul>
-        
-        <hr>
-        <h2>Solicitudes Pendientes</h2>
+
+        <h4>Archivos Subidos</h4>
+        <ul id="fileList" class="list-group mb-4"></ul>
+
+        <h4>Solicitudes Pendientes</h4>
         <ul id="pendingRequests" class="list-group"></ul>
     </div>
+
     <script src="assets/script.js"></script>
 </body>
 </html>

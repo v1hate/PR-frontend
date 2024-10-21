@@ -1,7 +1,7 @@
 const BASE_URL = 'https://pr-backend-d3rg.onrender.com'; // Reemplaza con tu URL real
 
 document.getElementById('connectButton').addEventListener('click', async function() {
-    userId = document.getElementById('userId').value;
+    const userId = document.getElementById('userId').value;
 
     const response = await fetch(`${BASE_URL}/connect`, {
         method: 'POST',
@@ -13,7 +13,10 @@ document.getElementById('connectButton').addEventListener('click', async functio
 
     const result = await response.json();
     alert(result.message);
-    loadPendingRequests(); // Cargar solicitudes después de conectar
+    if (result.message === 'User connected successfully') {
+        loadFiles(); // Cargar archivos y solicitudes si la conexión es exitosa
+        loadPendingRequests(userId);
+    }
 });
 
 // Manejo del formulario de subida de archivos
@@ -28,7 +31,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
 
     const result = await response.json();
     alert(result.message);
-    loadFiles();
+    loadFiles(); // Recargar archivos después de subir uno
 });
 
 // Función para cargar archivos
@@ -44,13 +47,10 @@ async function loadFiles() {
         li.textContent = file;
         fileList.appendChild(li);
     });
-
-    // Cargar solicitudes pendientes
-    loadPendingRequests();
 }
 
 // Cargar solicitudes pendientes
-async function loadPendingRequests() {
+async function loadPendingRequests(userId) {
     const response = await fetch(`${BASE_URL}/pending-requests?user_id=${userId}`);
     const requests = await response.json();
 
@@ -75,6 +75,8 @@ async function loadPendingRequests() {
 
 // Aceptar archivo
 async function acceptFile(filename) {
+    const userId = document.getElementById('userId').value; // Obtener el ID de usuario
+
     const response = await fetch(`${BASE_URL}/accept`, {
         method: 'POST',
         headers: {
@@ -88,4 +90,10 @@ async function acceptFile(filename) {
 }
 
 // Cargar archivos y solicitudes al cargar la página
-window.onload = loadFiles;
+window.onload = function() {
+    const userId = document.getElementById('userId').value; // Obtener el ID de usuario
+    if (userId) {
+        loadFiles();
+        loadPendingRequests(userId);
+    }
+};
