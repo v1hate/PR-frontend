@@ -1,9 +1,9 @@
-let userId;
+const BASE_URL = 'https://pr-backend-d3rg.onrender.com'; // Reemplaza con tu URL real
 
 document.getElementById('connectButton').addEventListener('click', async function() {
     userId = document.getElementById('userId').value;
 
-    const response = await fetch('https://pr-backend-d3rg.onrender.com/connect', {
+    const response = await fetch(`${BASE_URL}/connect`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -21,7 +21,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
     e.preventDefault();
     
     const formData = new FormData(this);
-    const response = await fetch('http://<tu_dominio>/upload', {
+    const response = await fetch(`${BASE_URL}/upload`, {
         method: 'POST',
         body: formData
     });
@@ -33,7 +33,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
 
 // Función para cargar archivos
 async function loadFiles() {
-    const response = await fetch('http://<tu_dominio>/files');
+    const response = await fetch(`${BASE_URL}/files`);
     const files = await response.json();
 
     const fileList = document.getElementById('fileList');
@@ -51,7 +51,7 @@ async function loadFiles() {
 
 // Cargar solicitudes pendientes
 async function loadPendingRequests() {
-    const response = await fetch(`http://<tu_dominio>/pending-requests?user_id=${userId}`);
+    const response = await fetch(`${BASE_URL}/pending-requests?user_id=${userId}`);
     const requests = await response.json();
 
     const pendingRequestsList = document.getElementById('pendingRequests');
@@ -75,7 +75,7 @@ async function loadPendingRequests() {
 
 // Aceptar archivo
 async function acceptFile(filename) {
-    const response = await fetch('http://<tu_dominio>/accept', {
+    const response = await fetch(`${BASE_URL}/accept`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
