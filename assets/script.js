@@ -3,7 +3,7 @@ let userId;
 document.getElementById('connectButton').addEventListener('click', async function() {
     userId = document.getElementById('userId').value;
 
-    const response = await fetch('http://<tu_dominio>/connect', {
+    const response = await fetch('https://pr-backend-d3rg.onrender.com/connect', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
