@@ -53,8 +53,11 @@ function uploadFile() {
         body: formData
     }).then(response => response.json())
       .then(data => {
-          // Notificar éxito
-          displayUploadStatus({ filename: data.filename, user_id: userId });
+          if (data.status === 'success') {
+              displayUploadStatus({ filename: data.filename, user_id: userId });
+          } else {
+              displayUploadStatus({ filename: 'Error', user_id: data.message });
+          }
       })
       .catch(error => {
           displayUploadStatus({ filename: 'Error', user_id: error.message });
