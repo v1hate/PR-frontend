@@ -6,6 +6,7 @@
     <title>Aplicación de Envío de Archivos</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script> <!-- Añade esta línea -->
 </head>
 <body>
     <div class="container mt-5">
@@ -29,6 +30,9 @@
 
         <h4 class="mt-4">Usuarios Conectados</h4>
         <ul id="connectedUsersList" class="list-group mb-4"></ul>
+
+        <h4 class="mt-4">Archivos Subidos</h4>
+        <ul id="uploadedFilesList" class="list-group"></ul>
     </div>
     
     <script src="assets/script.js"></script>

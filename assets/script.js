@@ -1,4 +1,5 @@
 const BASE_URL = 'https://pr-backend-d3rg.onrender.com'; // Cambia esto por la URL de tu back-end
+const socket = io(BASE_URL);
 
 // Manejar la conexión de usuario
 document.getElementById('connectForm').onsubmit = async function(event) {
@@ -16,7 +17,6 @@ document.getElementById('connectForm').onsubmit = async function(event) {
     const result = await response.json();
     alert(result.message);
     document.getElementById('connectedUserId').value = userId; // Guardar el ID de usuario conectado
-    loadConnectedUsers(); // Cargar usuarios conectados
 };
 
 // Manejar la subida de archivos
@@ -39,6 +39,54 @@ document.getElementById('uploadForm').onsubmit = async function(event) {
     fileInput.value = ''; // Limpiar el campo de entrada
 };
 
+// Manejar la actualización de usuarios conectados en tiempo real
+socket.on('update_users', function(users) {
+    const connectedUsersList = document.getElementById('connectedUsersList');
+    connectedUsersList.innerHTML = '';  // Limpiar la lista
+    users.forEach(user => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.textContent = user;
+        connectedUsersList.appendChild(li);
+    });
+});
+
+// Manejar la actualización de archivos subidos en tiempo real
+socket.on('update_files', function(files) {
+    const uploadedFilesList = document.getElementById('uploadedFilesList');
+    uploadedFilesList.innerHTML = '';  // Limpiar la lista
+    files.forEach(file => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.innerHTML = `${file} <a href="${BASE_URL}/download/${file}" class="btn btn-link">Descargar</a>`;
+        uploadedFilesList.appendChild(li);
+    });
+});
+
+// Cargar usuarios conectados y archivos subidos al cargar la página
+window.onload = async function() {
+    const userId = document.getElementById('connectedUserId').value;
+    if (userId) {
+        await loadConnectedUsers();
+        await loadUploadedFiles();
+    }
+};
+
+// Cargar archivos subidos (puede ser opcional si se usa WebSocket)
+async function loadUploadedFiles() {
+    const response = await fetch(`${BASE_URL}/files`);
+    const files = await response.json();
+
+    const uploadedFilesList = document.getElementById('uploadedFilesList');
+    uploadedFilesList.innerHTML = '';  // Limpiar la lista
+    files.forEach(file => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.innerHTML = `${file} <a href="${BASE_URL}/download/${file}" class="btn btn-link">Descargar</a>`;
+        uploadedFilesList.appendChild(li);
+    });
+}
+
 // Cargar usuarios conectados
 async function loadConnectedUsers() {
     const response = await fetch(`${BASE_URL}/connected-users`);
@@ -52,12 +100,18 @@ async function loadConnectedUsers() {
         li.textContent = user;
         connectedUsersList.appendChild(li);
     });
-}
+};
 
-// Cargar usuarios conectados al cargar la página y cada 5 segundos
-setInterval(loadConnectedUsers, 5000);
-window.onload = loadConnectedUsers;
-
-
-// Cargar usuarios conectados al cargar la página
-window.onload = loadConnectedUsers;
+// Desconectar al usuario al recargar o cerrar la página
+window.onbeforeunload = async function() {
+    const userId = document.getElementById('connectedUserId').value;
+    if (userId) {
+        await fetch(`${BASE_URL}/disconnect`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: userId })
+        });
+    }
+};
